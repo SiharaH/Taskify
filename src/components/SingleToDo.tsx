@@ -1,5 +1,8 @@
 import React from 'react'
 import { ToDo } from '../Model'
+import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { MdDone } from 'react-icons/md';
+import './styles.css';
 
 type Props = {
     todo: ToDo,
@@ -7,11 +10,37 @@ type Props = {
     setTodos: React.Dispatch<React.SetStateAction<ToDo[]>>
 }
 const SingleToDo = ({todo, todos, setTodos} : Props) => {
+
+    const handleDone = (id: number) => {
+        setTodos(todos.map((todo) => todo.id === id ? {...todo, isDone: !todo.isDone} : todo));
+    }
+    const handleEdit = () => {
+        const newTodo = prompt("Edit the task", todo.todo);
+        if (newTodo) {
+            setTodos(todos.map((t) => t.id === todo.id ? {...t, todo: newTodo} : t));
+        }
+    }
+    const handleDelete = (id: number) => {
+        setTodos(todos.filter((t) => t.id !== id));
+    }
+
   return (
     <form className='todos_single'> 
-    <span className="todos_single_text">
-        {todo.todo}
-    </span>
+    {
+      todo.isDone ? <s className="todos_single_text">{todo.todo}</s> 
+     : <span className="todos_single_text">{todo.todo}</span>
+    }
+    <div>
+        <span className="icon" onClick={() => handleEdit()}>
+          <AiFillEdit />
+          </span>
+        <span className="icon" onClick={() => handleDelete(todo.id)}>
+          <AiFillDelete />
+        </span>
+        <span className="icon" onClick={() => handleDone(todo.id)}>
+          <MdDone/>
+        </span>
+    </div>
     </form>
   )
 }
